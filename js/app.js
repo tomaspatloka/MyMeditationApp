@@ -9,6 +9,10 @@ class MeditationApp {
 
     this.currentView = 'timer';
     this.currentDuration = 600; // 10 minutes default
+
+    this.version = '1.0.0';
+    this.swRegistration = null;
+    this.hasUpdate = false;
   }
 
   /**
@@ -50,6 +54,9 @@ class MeditationApp {
       // Request notification permission if enabled
       this.checkNotificationPermission();
 
+      // Display version
+      this.displayVersion();
+
       console.log('[App] Initialization complete');
     } catch (error) {
       console.error('[App] Initialization error:', error);
@@ -63,6 +70,7 @@ class MeditationApp {
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('./sw.js');
+        this.swRegistration = registration;
         console.log('[App] Service Worker registered:', registration);
 
         // Check for updates
@@ -71,10 +79,17 @@ class MeditationApp {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               console.log('[App] New version available');
-              // Could show update notification here
+              this.hasUpdate = true;
+              this.showUpdateNotification();
             }
           });
         });
+
+        // Check for waiting service worker
+        if (registration.waiting) {
+          this.hasUpdate = true;
+          this.showUpdateNotification();
+        }
       } catch (error) {
         console.error('[App] Service Worker registration failed:', error);
       }
@@ -140,6 +155,16 @@ class MeditationApp {
     // Close settings button
     document.getElementById('closeSettings').addEventListener('click', () => {
       this.closeSettings();
+    });
+
+    // Check for updates button
+    document.getElementById('checkUpdateBtn').addEventListener('click', () => {
+      this.checkForUpdates();
+    });
+
+    // Force update button
+    document.getElementById('forceUpdateBtn').addEventListener('click', () => {
+      this.forceUpdate();
     });
 
     // Timer duration buttons
@@ -487,6 +512,90 @@ class MeditationApp {
       if (permission === 'granted') {
         console.log('[App] Notification permission granted');
       }
+    }
+  }
+
+  /**
+   * Display version in UI
+   */
+  displayVersion() {
+    const versionElements = document.querySelectorAll('#appVersion, #settingsVersion');
+    versionElements.forEach(el => {
+      if (el) el.textContent = `v${this.version}`;
+    });
+  }
+
+  /**
+   * Show update notification
+   */
+  showUpdateNotification() {
+    const updateStatus = document.getElementById('updateStatus');
+    const updateMessage = document.getElementById('updateMessage');
+    const forceUpdateBtn = document.getElementById('forceUpdateBtn');
+
+    if (updateStatus && updateMessage && forceUpdateBtn) {
+      updateStatus.classList.remove('hidden');
+      updateStatus.classList.add('warning');
+      updateMessage.textContent = 'Je dostupná nová verze aplikace!';
+      forceUpdateBtn.classList.remove('hidden');
+    }
+  }
+
+  /**
+   * Check for updates manually
+   */
+  async checkForUpdates() {
+    const updateStatus = document.getElementById('updateStatus');
+    const updateMessage = document.getElementById('updateMessage');
+    const forceUpdateBtn = document.getElementById('forceUpdateBtn');
+
+    // Show checking status
+    updateStatus.classList.remove('hidden');
+    updateStatus.classList.remove('success', 'warning');
+    updateMessage.textContent = 'Kontroluji aktualizace...';
+
+    try {
+      if (this.swRegistration) {
+        await this.swRegistration.update();
+
+        // Wait a bit to check if update was found
+        setTimeout(() => {
+          if (this.hasUpdate) {
+            updateStatus.classList.add('warning');
+            updateMessage.textContent = 'Je dostupná nová verze!';
+            forceUpdateBtn.classList.remove('hidden');
+          } else {
+            updateStatus.classList.add('success');
+            updateMessage.textContent = 'Máte nejnovější verzi aplikace';
+            forceUpdateBtn.classList.add('hidden');
+          }
+        }, 1000);
+      } else {
+        updateStatus.classList.add('success');
+        updateMessage.textContent = 'Service Worker není dostupný';
+      }
+    } catch (error) {
+      console.error('[App] Update check failed:', error);
+      updateStatus.classList.remove('success', 'warning');
+      updateMessage.textContent = 'Chyba při kontrole aktualizací';
+    }
+  }
+
+  /**
+   * Force update application
+   */
+  forceUpdate() {
+    if (this.swRegistration && this.swRegistration.waiting) {
+      // Send message to waiting service worker to skip waiting
+      this.swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+
+      // Reload page when new service worker takes control
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+    } else {
+      // Just reload if no waiting worker
+      window.location.reload();
     }
   }
 }

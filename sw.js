@@ -1,5 +1,6 @@
 // Service Worker for Meditation PWA
-const CACHE_NAME = 'meditation-v1.0.0';
+const VERSION = '1.0.0';
+const CACHE_NAME = `meditation-v${VERSION}`;
 const AUDIO_CACHE = 'meditation-audio-v1';
 
 // Files to precache on install
@@ -7,6 +8,7 @@ const PRECACHE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './version.json',
   './css/styles.css',
   './css/timer.css',
   './css/breathing.css',
@@ -22,7 +24,7 @@ const PRECACHE_ASSETS = [
 
 // Install event - precache static assets
 self.addEventListener('install', event => {
-  console.log('[SW] Installing service worker...');
+  console.log(`[SW] Installing service worker v${VERSION}...`);
 
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -31,13 +33,20 @@ self.addEventListener('install', event => {
         return cache.addAll(PRECACHE_ASSETS);
       })
       .then(() => {
-        console.log('[SW] Skip waiting');
-        return self.skipWaiting();
+        console.log('[SW] Install complete');
       })
       .catch(error => {
         console.error('[SW] Precaching failed:', error);
       })
   );
+});
+
+// Message event - handle skip waiting
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('[SW] Skip waiting requested');
+    self.skipWaiting();
+  }
 });
 
 // Activate event - clean up old caches

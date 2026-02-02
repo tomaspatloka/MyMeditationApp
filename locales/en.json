@@ -49,7 +49,9 @@
     "bellSound": "Bell Sound",
     "notifications": "Enable Notifications",
     "keepAwake": "Keep screen awake during meditation",
-    "about": "About"
+    "about": "About",
+    "checkUpdate": "Check for Updates",
+    "forceUpdate": "Update Now"
   },
   "badges": {
     "seed": {

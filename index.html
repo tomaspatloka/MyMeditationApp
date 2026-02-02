@@ -37,12 +37,10 @@
             <div class="app-bar-content">
                 <div class="app-title-wrapper">
                     <span class="material-symbols-outlined app-logo">self_improvement</span>
-                    <h1 class="app-title" data-i18n="app.title">Meditace <span class="app-version">v1.0</span></h1>
+                    <h1 class="app-title" data-i18n="app.title">Meditace</h1>
                 </div>
-                <div class="app-actions">
-                    <button class="icon-button" id="settingsBtn" title="Nastavení">
-                        <span class="material-symbols-outlined">settings</span>
-                    </button>
+                <div class="app-version-badge">
+                    <span id="appVersion">v1.0.0</span>
                 </div>
             </div>
         </header>
@@ -270,8 +268,22 @@
                             <span class="material-symbols-outlined">info</span>
                             <span data-i18n="settings.about">O aplikaci</span>
                         </h3>
-                        <p class="info-text">Verze 1.0.0</p>
+                        <p class="info-text">
+                            <strong>Verze:</strong> <span id="settingsVersion">1.0.0</span>
+                        </p>
                         <p class="info-text">Offline-first PWA aplikace pro meditaci a dechová cvičení</p>
+                        <div id="updateStatus" class="update-status hidden">
+                            <span class="material-symbols-outlined">info</span>
+                            <span id="updateMessage"></span>
+                        </div>
+                        <button id="checkUpdateBtn" class="btn btn-secondary" style="margin-top: 12px; width: 100%;">
+                            <span class="material-symbols-outlined">refresh</span>
+                            <span data-i18n="settings.checkUpdate">Zkontrolovat aktualizace</span>
+                        </button>
+                        <button id="forceUpdateBtn" class="btn btn-primary hidden" style="margin-top: 8px; width: 100%;">
+                            <span class="material-symbols-outlined">system_update</span>
+                            <span data-i18n="settings.forceUpdate">Aktualizovat nyní</span>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -292,6 +304,10 @@
                 <button class="tab" data-view="stats">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="tab-label" data-i18n="nav.stats">Statistiky</span>
+                </button>
+                <button class="tab" data-view="settings">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="tab-label" data-i18n="nav.settings">Nastavení</span>
                 </button>
             </div>
         </nav>

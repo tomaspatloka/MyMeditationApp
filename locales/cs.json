@@ -49,7 +49,9 @@
     "bellSound": "Zvuk zvonku",
     "notifications": "Povolit notifikace",
     "keepAwake": "Udržet displej aktivní během meditace",
-    "about": "O aplikaci"
+    "about": "O aplikaci",
+    "checkUpdate": "Zkontrolovat aktualizace",
+    "forceUpdate": "Aktualizovat nyní"
   },
   "badges": {
     "seed": {
