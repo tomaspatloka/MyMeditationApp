@@ -1,234 +1,309 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <meta name="theme-color" content="#16213e">
-  <meta name="description" content="Meditace, dýchání a relaxace">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#3f51b5">
+    <link rel="icon" href="./icons/icon-72.png" type="image/png">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-  <title>Meditační Aplikace</title>
+    <!-- Pro iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Pro Android / moderní prohlížeče -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Meditační aplikace s timerem, dechovými cvičeními a offline režimem">
+    <title>Meditace</title>
 
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/png" href="./icons/icon-72.png">
-  <link rel="stylesheet" href="./css/styles.css">
-  <link rel="stylesheet" href="./css/timer.css">
-  <link rel="stylesheet" href="./css/breathing.css">
+    <!-- Google Fonts: Roboto & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
 
-  <!-- iOS icons -->
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/timer.css">
+    <link rel="stylesheet" href="./css/breathing.css">
 </head>
+
 <body>
-  <div class="app-container">
-    <!-- Header -->
-    <header class="app-header">
-      <h1 data-i18n="app.title">Meditační aplikace</h1>
-      <p class="tagline" data-i18n="app.tagline">Najděte svůj vnitřní klid</p>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="main-nav">
-      <button class="nav-btn active" data-view="timer" data-i18n="nav.timer">Timer</button>
-      <button class="nav-btn" data-view="breathing" data-i18n="nav.breathing">Dýchání</button>
-      <button class="nav-btn" data-view="stats" data-i18n="nav.stats">Statistiky</button>
-      <button class="nav-btn" data-view="settings" data-i18n="nav.settings">Nastavení</button>
-    </nav>
-
-    <!-- Main Content Area -->
-    <main class="main-content">
-
-      <!-- Timer View -->
-      <section id="view-timer" class="view active">
-        <div class="timer-container">
-          <div class="timer-display">
-            <div class="timer-circle">
-              <svg class="progress-ring" width="280" height="280">
-                <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#667eea"/>
-                    <stop offset="100%" stop-color="#764ba2"/>
-                  </linearGradient>
-                </defs>
-                <circle class="progress-ring-bg" cx="140" cy="140" r="120"/>
-                <circle class="progress-ring-fill" cx="140" cy="140" r="120"/>
-              </svg>
-              <div class="timer-time" id="timerDisplay">10:00</div>
+    <div class="app-container">
+        <!-- App Bar -->
+        <header class="app-bar">
+            <div class="app-bar-content">
+                <div class="app-title-wrapper">
+                    <span class="material-symbols-outlined app-logo">self_improvement</span>
+                    <h1 class="app-title" data-i18n="app.title">Meditace <span class="app-version">v1.0</span></h1>
+                </div>
+                <div class="app-actions">
+                    <button class="icon-button" id="settingsBtn" title="Nastavení">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
             </div>
-          </div>
+        </header>
 
-          <div class="duration-selector">
-            <button class="duration-btn" data-duration="300">5 min</button>
-            <button class="duration-btn active" data-duration="600">10 min</button>
-            <button class="duration-btn" data-duration="900">15 min</button>
-            <button class="duration-btn" data-duration="1200">20 min</button>
-            <button class="duration-btn" data-duration="1800">30 min</button>
-          </div>
-
-          <div class="timer-controls">
-            <button id="timerStart" class="btn btn-primary" data-i18n="timer.start">Spustit</button>
-            <button id="timerPause" class="btn btn-secondary hidden" data-i18n="timer.pause">Pozastavit</button>
-            <button id="timerResume" class="btn btn-primary hidden" data-i18n="timer.resume">Pokračovat</button>
-            <button id="timerStop" class="btn btn-danger hidden" data-i18n="timer.stop">Zastavit</button>
-          </div>
-
-          <div class="audio-controls">
-            <h3 data-i18n="audio.background">Podkresová hudba</h3>
-            <div class="audio-selector">
-              <label class="audio-option">
-                <input type="radio" name="bgSound" value="none" checked>
-                <span data-i18n="audio.none">Žádný</span>
-              </label>
-              <label class="audio-option">
-                <input type="radio" name="bgSound" value="rain">
-                <span data-i18n="audio.rain">Déšť</span>
-              </label>
-              <label class="audio-option">
-                <input type="radio" name="bgSound" value="ocean">
-                <span data-i18n="audio.ocean">Oceán</span>
-              </label>
-              <label class="audio-option">
-                <input type="radio" name="bgSound" value="forest">
-                <span data-i18n="audio.forest">Les</span>
-              </label>
+        <!-- Tabs -->
+        <nav class="tabs-container">
+            <div class="tabs-scroll">
+                <button class="tab active" data-view="timer">
+                    <span class="material-symbols-outlined">timer</span>
+                    <span class="tab-label" data-i18n="nav.timer">Timer</span>
+                </button>
+                <button class="tab" data-view="breathing">
+                    <span class="material-symbols-outlined">air</span>
+                    <span class="tab-label" data-i18n="nav.breathing">Dýchání</span>
+                </button>
+                <button class="tab" data-view="stats">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <span class="tab-label" data-i18n="nav.stats">Statistiky</span>
+                </button>
             </div>
+        </nav>
 
-            <div class="volume-control">
-              <label for="bgVolume" data-i18n="audio.volume">Hlasitost</label>
-              <input type="range" id="bgVolume" min="0" max="100" value="30" step="1">
-              <span id="volumeValue">30%</span>
-            </div>
-          </div>
-        </div>
-      </section>
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
 
-      <!-- Breathing View -->
-      <section id="view-breathing" class="view">
-        <div class="breathing-container">
-          <div class="breathing-display">
-            <div class="breathing-circle" id="breathingCircle"></div>
-            <div class="breathing-text" id="breathingText" data-i18n="breathing.prepare">Připravte se</div>
-            <div class="breathing-timer" id="breathingTimer">4</div>
-          </div>
+            <!-- Timer View -->
+            <section id="view-timer" class="view active">
+                <div class="timer-container">
+                    <div class="timer-display">
+                        <div class="timer-circle">
+                            <svg class="progress-ring" width="220" height="220">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#3f51b5"/>
+                                        <stop offset="100%" stop-color="#009688"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle class="progress-ring-bg" cx="110" cy="110" r="95"/>
+                                <circle class="progress-ring-fill" cx="110" cy="110" r="95"/>
+                            </svg>
+                            <div class="timer-time" id="timerDisplay">10:00</div>
+                        </div>
+                    </div>
 
-          <div class="breathing-pattern-selector">
-            <label for="breathingPattern" data-i18n="breathing.pattern">Technika:</label>
-            <select id="breathingPattern">
-              <option value="box">Box breathing (4-4-4-4)</option>
-              <option value="478">Relaxační (4-7-8)</option>
-              <option value="simple">Jednoduché (5.5-5.5)</option>
-              <option value="bhramari">Bhramari (včelí dech)</option>
-            </select>
-          </div>
+                    <div class="duration-selector">
+                        <button class="duration-btn" data-duration="300">5 min</button>
+                        <button class="duration-btn active" data-duration="600">10 min</button>
+                        <button class="duration-btn" data-duration="900">15 min</button>
+                        <button class="duration-btn" data-duration="1200">20 min</button>
+                        <button class="duration-btn" data-duration="1800">30 min</button>
+                    </div>
 
-          <div class="breathing-info">
-            <p id="breathingDescription" class="info-text"></p>
-          </div>
+                    <div class="timer-controls">
+                        <button id="timerStart" class="btn btn-primary" data-i18n="timer.start">
+                            <span class="material-symbols-outlined">play_arrow</span>
+                            <span>Spustit</span>
+                        </button>
+                        <button id="timerPause" class="btn btn-secondary hidden" data-i18n="timer.pause">
+                            <span class="material-symbols-outlined">pause</span>
+                            <span>Pozastavit</span>
+                        </button>
+                        <button id="timerResume" class="btn btn-primary hidden" data-i18n="timer.resume">
+                            <span class="material-symbols-outlined">play_arrow</span>
+                            <span>Pokračovat</span>
+                        </button>
+                        <button id="timerStop" class="btn btn-danger hidden" data-i18n="timer.stop">
+                            <span class="material-symbols-outlined">stop</span>
+                            <span>Zastavit</span>
+                        </button>
+                    </div>
 
-          <div class="breathing-controls">
-            <button id="breathingStart" class="btn btn-primary" data-i18n="breathing.start">Začít</button>
-            <button id="breathingStop" class="btn btn-danger hidden" data-i18n="breathing.stop">Zastavit</button>
-          </div>
-        </div>
-      </section>
+                    <div class="card audio-controls">
+                        <h3 data-i18n="audio.background">
+                            <span class="material-symbols-outlined">music_note</span>
+                            Podkresová hudba
+                        </h3>
+                        <div class="audio-selector">
+                            <label class="audio-option">
+                                <input type="radio" name="bgSound" value="none" checked>
+                                <span class="material-symbols-outlined">not_interested</span>
+                                <span data-i18n="audio.none">Žádný</span>
+                            </label>
+                            <label class="audio-option">
+                                <input type="radio" name="bgSound" value="rain">
+                                <span class="material-symbols-outlined">rainy</span>
+                                <span data-i18n="audio.rain">Déšť</span>
+                            </label>
+                            <label class="audio-option">
+                                <input type="radio" name="bgSound" value="ocean">
+                                <span class="material-symbols-outlined">waves</span>
+                                <span data-i18n="audio.ocean">Oceán</span>
+                            </label>
+                            <label class="audio-option">
+                                <input type="radio" name="bgSound" value="forest">
+                                <span class="material-symbols-outlined">park</span>
+                                <span data-i18n="audio.forest">Les</span>
+                            </label>
+                        </div>
 
-      <!-- Stats View -->
-      <section id="view-stats" class="view">
-        <div class="stats-container">
-          <h2 data-i18n="stats.title">Vaše statistiky</h2>
+                        <div class="volume-control">
+                            <span class="material-symbols-outlined">volume_up</span>
+                            <input type="range" id="bgVolume" min="0" max="100" value="30" step="1">
+                            <span id="volumeValue">30%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon">🔥</div>
-              <div class="stat-value" id="statStreak">0</div>
-              <div class="stat-label" data-i18n="stats.currentStreak">Aktuální série</div>
-            </div>
+            <!-- Breathing View -->
+            <section id="view-breathing" class="view">
+                <div class="breathing-container">
+                    <div class="breathing-display">
+                        <div class="breathing-circle" id="breathingCircle"></div>
+                        <div class="breathing-text" id="breathingText" data-i18n="breathing.prepare">Připravte se</div>
+                        <div class="breathing-timer" id="breathingTimer">4</div>
+                    </div>
 
-            <div class="stat-card">
-              <div class="stat-icon">⏱️</div>
-              <div class="stat-value" id="statSessions">0</div>
-              <div class="stat-label" data-i18n="stats.totalSessions">Celkem sezení</div>
-            </div>
+                    <div class="card breathing-pattern-selector">
+                        <label for="breathingPattern" data-i18n="breathing.pattern">
+                            <span class="material-symbols-outlined">category</span>
+                            Technika:
+                        </label>
+                        <select id="breathingPattern">
+                            <option value="box">Box breathing (4-4-4-4)</option>
+                            <option value="478">Relaxační (4-7-8)</option>
+                            <option value="simple">Jednoduché (5.5-5.5)</option>
+                            <option value="bhramari">Bhramari (včelí dech)</option>
+                        </select>
+                    </div>
 
-            <div class="stat-card">
-              <div class="stat-icon">🕐</div>
-              <div class="stat-value" id="statMinutes">0</div>
-              <div class="stat-label" data-i18n="stats.totalMinutes">Celkem minut</div>
-            </div>
+                    <div class="card breathing-info">
+                        <p id="breathingDescription" class="info-text"></p>
+                    </div>
 
-            <div class="stat-card">
-              <div class="stat-icon">🏆</div>
-              <div class="stat-value" id="statLongest">0</div>
-              <div class="stat-label" data-i18n="stats.longestStreak">Nejdelší série</div>
-            </div>
-          </div>
+                    <div class="breathing-controls">
+                        <button id="breathingStart" class="btn btn-primary" data-i18n="breathing.start">
+                            <span class="material-symbols-outlined">play_arrow</span>
+                            <span>Začít</span>
+                        </button>
+                        <button id="breathingStop" class="btn btn-danger hidden" data-i18n="breathing.stop">
+                            <span class="material-symbols-outlined">stop</span>
+                            <span>Zastavit</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-          <div class="progress-section">
-            <h3 data-i18n="stats.progress">Váš postup</h3>
-            <div class="progress-badge">
-              <div class="badge-icon" id="badgeIcon">🌱</div>
-              <div class="badge-name" id="badgeName">Sémě</div>
-              <div class="badge-desc" id="badgeDesc">Začínáte svou cestu</div>
-            </div>
-          </div>
-        </div>
-      </section>
+            <!-- Stats View -->
+            <section id="view-stats" class="view">
+                <div class="stats-container">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="material-symbols-outlined stat-icon">local_fire_department</span>
+                            <div class="stat-value" id="statStreak">0</div>
+                            <div class="stat-label" data-i18n="stats.currentStreak">Aktuální série</div>
+                        </div>
 
-      <!-- Settings View -->
-      <section id="view-settings" class="view">
-        <div class="settings-container">
-          <h2 data-i18n="settings.title">Nastavení</h2>
+                        <div class="stat-card">
+                            <span class="material-symbols-outlined stat-icon">event_repeat</span>
+                            <div class="stat-value" id="statSessions">0</div>
+                            <div class="stat-label" data-i18n="stats.totalSessions">Celkem sezení</div>
+                        </div>
 
-          <div class="settings-group">
-            <label for="settingsLang" data-i18n="settings.language">Jazyk</label>
-            <select id="settingsLang">
-              <option value="cs">Čeština</option>
-              <option value="en">English</option>
-            </select>
-          </div>
+                        <div class="stat-card">
+                            <span class="material-symbols-outlined stat-icon">schedule</span>
+                            <div class="stat-value" id="statMinutes">0</div>
+                            <div class="stat-label" data-i18n="stats.totalMinutes">Celkem minut</div>
+                        </div>
 
-          <div class="settings-group">
-            <label for="settingsBell" data-i18n="settings.bellSound">Zvuk zvonku</label>
-            <select id="settingsBell">
-              <option value="tibetan">Tibetská mísa</option>
-              <option value="bell">Klasický zvonek</option>
-              <option value="gong">Gong</option>
-              <option value="none">Bez zvuku</option>
-            </select>
-          </div>
+                        <div class="stat-card">
+                            <span class="material-symbols-outlined stat-icon">emoji_events</span>
+                            <div class="stat-value" id="statLongest">0</div>
+                            <div class="stat-label" data-i18n="stats.longestStreak">Nejdelší série</div>
+                        </div>
+                    </div>
 
-          <div class="settings-group">
-            <label>
-              <input type="checkbox" id="settingsNotifications">
-              <span data-i18n="settings.notifications">Povolit notifikace</span>
-            </label>
-          </div>
+                    <div class="card progress-section">
+                        <h3 data-i18n="stats.progress">
+                            <span class="material-symbols-outlined">trending_up</span>
+                            Váš postup
+                        </h3>
+                        <div class="progress-badge">
+                            <div class="badge-icon" id="badgeIcon">🌱</div>
+                            <div class="badge-name" id="badgeName">Sémě</div>
+                            <div class="badge-desc" id="badgeDesc">Začínáte svou cestu</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-          <div class="settings-group">
-            <label>
-              <input type="checkbox" id="settingsKeepAwake" checked>
-              <span data-i18n="settings.keepAwake">Udržet displej aktivní během meditace</span>
-            </label>
-          </div>
+            <!-- Settings View (Modal-like overlay) -->
+            <section id="view-settings" class="view settings-overlay">
+                <div class="settings-container">
+                    <div class="settings-header">
+                        <h2 data-i18n="settings.title">Nastavení</h2>
+                        <button class="icon-button" id="closeSettings">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
 
-          <div class="settings-group">
-            <h3 data-i18n="settings.about">O aplikaci</h3>
-            <p class="info-text">Verze 1.0.0</p>
-            <p class="info-text">Offline-first PWA aplikace pro meditaci a dechová cvičení</p>
-          </div>
-        </div>
-      </section>
+                    <div class="card settings-group">
+                        <label for="settingsLang">
+                            <span class="material-symbols-outlined">language</span>
+                            <span data-i18n="settings.language">Jazyk</span>
+                        </label>
+                        <select id="settingsLang">
+                            <option value="cs">Čeština</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
 
-    </main>
-  </div>
+                    <div class="card settings-group">
+                        <label for="settingsBell">
+                            <span class="material-symbols-outlined">notifications</span>
+                            <span data-i18n="settings.bellSound">Zvuk zvonku</span>
+                        </label>
+                        <select id="settingsBell">
+                            <option value="tibetan">Tibetská mísa</option>
+                            <option value="bell">Klasický zvonek</option>
+                            <option value="gong">Gong</option>
+                            <option value="none">Bez zvuku</option>
+                        </select>
+                    </div>
 
-  <!-- Scripts -->
-  <script src="./js/storage.js"></script>
-  <script src="./js/i18n.js"></script>
-  <script src="./js/timer.js"></script>
-  <script src="./js/audio.js"></script>
-  <script src="./js/breathing.js"></script>
-  <script src="./js/app.js"></script>
+                    <div class="card settings-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="settingsNotifications">
+                            <span class="material-symbols-outlined checkbox-icon">notifications_active</span>
+                            <span data-i18n="settings.notifications">Povolit notifikace</span>
+                        </label>
+                    </div>
+
+                    <div class="card settings-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="settingsKeepAwake" checked>
+                            <span class="material-symbols-outlined checkbox-icon">lightbulb</span>
+                            <span data-i18n="settings.keepAwake">Udržet displej aktivní během meditace</span>
+                        </label>
+                    </div>
+
+                    <div class="card settings-group">
+                        <h3>
+                            <span class="material-symbols-outlined">info</span>
+                            <span data-i18n="settings.about">O aplikaci</span>
+                        </h3>
+                        <p class="info-text">Verze 1.0.0</p>
+                        <p class="info-text">Offline-first PWA aplikace pro meditaci a dechová cvičení</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./js/storage.js"></script>
+    <script src="./js/i18n.js"></script>
+    <script src="./js/timer.js"></script>
+    <script src="./js/audio.js"></script>
+    <script src="./js/breathing.js"></script>
+    <script src="./js/app.js"></script>
 </body>
+
 </html>

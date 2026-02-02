@@ -124,11 +124,22 @@ class MeditationApp {
    * Setup all event listeners
    */
   setupEventListeners() {
-    // Navigation
-    document.querySelectorAll('.nav-btn').forEach(btn => {
+    // Navigation - Tab buttons
+    document.querySelectorAll('.tab').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        this.switchView(e.target.dataset.view);
+        const view = e.currentTarget.dataset.view;
+        this.switchView(view);
       });
+    });
+
+    // Settings button
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+      this.openSettings();
+    });
+
+    // Close settings button
+    document.getElementById('closeSettings').addEventListener('click', () => {
+      this.closeSettings();
     });
 
     // Timer duration buttons
@@ -212,19 +223,28 @@ class MeditationApp {
    * Switch between views
    */
   switchView(viewName) {
-    // Hide all views
-    document.querySelectorAll('.view').forEach(view => {
+    // Don't show settings view via tabs
+    if (viewName === 'settings') {
+      this.openSettings();
+      return;
+    }
+
+    // Hide all views (except settings)
+    document.querySelectorAll('.view:not(.settings-overlay)').forEach(view => {
       view.classList.remove('active');
     });
 
     // Show selected view
     document.getElementById(`view-${viewName}`).classList.add('active');
 
-    // Update nav buttons
-    document.querySelectorAll('.nav-btn').forEach(btn => {
+    // Update tab buttons
+    document.querySelectorAll('.tab').forEach(btn => {
       btn.classList.remove('active');
     });
-    document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+    const activeTab = document.querySelector(`.tab[data-view="${viewName}"]`);
+    if (activeTab) {
+      activeTab.classList.add('active');
+    }
 
     this.currentView = viewName;
 
@@ -232,6 +252,22 @@ class MeditationApp {
     if (viewName === 'stats') {
       this.updateStatsView();
     }
+  }
+
+  /**
+   * Open settings overlay
+   */
+  openSettings() {
+    document.getElementById('view-settings').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close settings overlay
+   */
+  closeSettings() {
+    document.getElementById('view-settings').classList.remove('active');
+    document.body.style.overflow = '';
   }
 
   /**
@@ -348,9 +384,9 @@ class MeditationApp {
   updateTimerProgress(time, progress) {
     document.getElementById('timerDisplay').textContent = time;
 
-    // Update progress ring
+    // Update progress ring (radius 95 for 220px circle)
     const circle = document.querySelector('.progress-ring-fill');
-    const radius = 120;
+    const radius = 95;
     const circumference = 2 * Math.PI * radius;
     const offset = circumference * (1 - progress);
     circle.style.strokeDashoffset = offset;

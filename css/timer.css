@@ -1,19 +1,20 @@
-/* Timer Styles */
+/* Timer Styles - Material Design 3 */
+
 .timer-container {
-  padding: var(--spacing-md);
+  padding: 0;
 }
 
 .timer-display {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: var(--spacing-xl) 0;
+  margin: var(--spacing-lg) 0;
 }
 
 .timer-circle {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: 220px;
+  height: 220px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,12 +25,12 @@
   top: 0;
   left: 0;
   transform: rotate(-90deg);
-  filter: drop-shadow(0 0 20px var(--accent-glow));
+  filter: drop-shadow(0 2px 8px rgba(63, 81, 181, 0.3));
 }
 
 .progress-ring-bg {
   fill: none;
-  stroke: var(--bg-secondary);
+  stroke: var(--md-sys-color-surface-variant);
   stroke-width: 8;
 }
 
@@ -38,30 +39,19 @@
   stroke: url(#gradient);
   stroke-width: 8;
   stroke-linecap: round;
-  stroke-dasharray: 753.98;
-  stroke-dashoffset: 753.98;
+  stroke-dasharray: 596.9;
+  stroke-dashoffset: 596.9;
   transition: stroke-dashoffset 1s linear;
 }
 
 .timer-time {
   position: relative;
   z-index: 1;
-  font-size: 3.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 40px;
+  font-weight: 500;
+  color: var(--md-sys-color-primary);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
-}
-
-.timer-controls {
-  display: flex;
-  gap: var(--spacing-md);
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: var(--spacing-xl);
+  letter-spacing: 0.02em;
 }
 
 /* Pulsing animation when timer is running */
@@ -71,47 +61,47 @@
 
 @keyframes pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 20px var(--accent-glow));
+    filter: drop-shadow(0 2px 8px rgba(63, 81, 181, 0.3));
   }
   50% {
-    filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.6));
+    filter: drop-shadow(0 4px 16px rgba(63, 81, 181, 0.5));
   }
 }
 
 /* Responsive adjustments */
 @media (max-width: 380px) {
   .timer-circle {
-    width: 240px;
-    height: 240px;
+    width: 200px;
+    height: 200px;
   }
 
   .progress-ring {
-    width: 240px;
-    height: 240px;
+    width: 200px;
+    height: 200px;
   }
 
   .progress-ring-bg,
   .progress-ring-fill {
-    r: 100;
+    r: 90;
   }
 
   .timer-time {
-    font-size: 2.8rem;
+    font-size: 36px;
   }
 }
 
 @media (min-width: 768px) {
   .timer-circle {
-    width: 320px;
-    height: 320px;
+    width: 260px;
+    height: 260px;
   }
 
   .progress-ring {
-    width: 320px;
-    height: 320px;
+    width: 260px;
+    height: 260px;
   }
 
   .timer-time {
-    font-size: 4rem;
+    font-size: 48px;
   }
 }
