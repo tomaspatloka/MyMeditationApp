@@ -131,6 +131,13 @@ class MeditationApp {
     document.getElementById('settingsBell').value = prefs.bellSound;
     document.getElementById('settingsKeepAwake').checked = prefs.keepAwake;
 
+    // Apply theme
+    const lightMode = prefs.lightMode || false;
+    document.getElementById('settingsTheme').checked = lightMode;
+    if (lightMode) {
+      document.body.classList.add('light-mode');
+    }
+
     // Store in localStorage for easy access
     localStorage.setItem('keepAwake', prefs.keepAwake);
   }
@@ -233,6 +240,10 @@ class MeditationApp {
       localStorage.setItem('keepAwake', e.target.checked);
     });
 
+    document.getElementById('settingsTheme').addEventListener('change', (e) => {
+      this.toggleTheme(e.target.checked);
+    });
+
     // Timer callbacks
     this.timer.onTick = (time, progress) => {
       this.updateTimerProgress(time, progress);
@@ -246,6 +257,28 @@ class MeditationApp {
     document.addEventListener('click', () => {
       this.audio.unlock();
     }, { once: true });
+  }
+
+  /**
+   * Toggle between light and dark theme
+   */
+  toggleTheme(enabled) {
+    document.body.classList.add('theme-switching');
+
+    if (enabled) {
+      document.body.classList.add('light-mode');
+    } else {
+      document.body.classList.remove('light-mode');
+    }
+
+    const themeColor = enabled ? '#fdfbff' : '#16213e';
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
+
+    this.storage.setPreference('lightMode', enabled);
+
+    setTimeout(() => {
+      document.body.classList.remove('theme-switching');
+    }, 300);
   }
 
   /**
@@ -480,14 +513,234 @@ class MeditationApp {
     const stats = this.storage.getStats();
     const badge = this.storage.getBadge();
 
-    document.getElementById('statStreak').textContent = stats.currentStreak;
-    document.getElementById('statSessions').textContent = stats.totalSessions;
-    document.getElementById('statMinutes').textContent = stats.totalMinutes;
-    document.getElementById('statLongest').textContent = stats.longestStreak;
+    const previousStats = JSON.parse(localStorage.getItem('previousStats') || '{}');
+
+    // Update stat values with animation
+    this.updateStatValue('statStreak', stats.currentStreak);
+    this.updateStatValue('statSessions', stats.totalSessions);
+    this.updateStatValue('statMinutes', stats.totalMinutes);
+    this.updateStatValue('statLongest', stats.longestStreak);
+
+    // Update trends
+    this.updateStatTrend('statStreakTrend', stats.currentStreak, previousStats.currentStreak);
+    this.updateStatTrend('statSessionsTrend', stats.totalSessions, previousStats.totalSessions);
+    this.updateStatTrend('statMinutesTrend', stats.totalMinutes, previousStats.totalMinutes);
+    this.updateStatTrend('statLongestTrend', stats.longestStreak, previousStats.longestStreak);
+
+    localStorage.setItem('previousStats', JSON.stringify({
+      currentStreak: stats.currentStreak,
+      totalSessions: stats.totalSessions,
+      totalMinutes: stats.totalMinutes,
+      longestStreak: stats.longestStreak
+    }));
 
     document.getElementById('badgeIcon').textContent = badge.icon;
     document.getElementById('badgeName').textContent = badge.name;
     document.getElementById('badgeDesc').textContent = badge.desc;
+
+    // Render visualizations
+    this.renderWeeklyChart();
+    this.renderCalendarHeatmap();
+  }
+
+  /**
+   * Update stat value with animation
+   */
+  updateStatValue(elementId, newValue) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    element.classList.add('updating');
+    element.textContent = newValue;
+
+    setTimeout(() => element.classList.remove('updating'), 500);
+  }
+
+  /**
+   * Update stat trend indicator
+   */
+  updateStatTrend(elementId, newValue, oldValue) {
+    const element = document.getElementById(elementId);
+    if (!element || oldValue === undefined) {
+      if (element) element.innerHTML = '';
+      return;
+    }
+
+    const diff = newValue - oldValue;
+
+    if (diff > 0) {
+      element.className = 'stat-trend up';
+      element.innerHTML = `↑ +${diff}`;
+    } else if (diff < 0) {
+      element.className = 'stat-trend down';
+      element.innerHTML = `↓ ${diff}`;
+    } else {
+      element.className = 'stat-trend neutral';
+      element.innerHTML = '—';
+    }
+  }
+
+  /**
+   * Get weekly data for chart
+   */
+  getWeeklyData() {
+    const days = [];
+    const today = new Date();
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+
+      const sessions = this.storage.data.sessions.filter(s =>
+        s.date === dateStr && s.completed
+      );
+
+      const totalMinutes = sessions.reduce((sum, s) =>
+        sum + Math.round(s.duration / 60), 0
+      );
+
+      const dayName = date.toLocaleDateString(this.i18n.getLocale(), { weekday: 'short' });
+
+      days.push({
+        date: dateStr,
+        label: dayName,
+        minutes: totalMinutes,
+        sessions: sessions.length
+      });
+    }
+
+    return days;
+  }
+
+  /**
+   * Render weekly progress bar chart using SVG
+   */
+  renderWeeklyChart() {
+    const container = document.getElementById('weeklyChart');
+    if (!container) return;
+
+    const weekData = this.getWeeklyData();
+    const today = new Date().toISOString().split('T')[0];
+
+    const width = container.parentElement.clientWidth - 16;
+    const height = 200;
+    const padding = { top: 20, right: 10, bottom: 30, left: 30 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+
+    const maxMinutes = Math.max(...weekData.map(d => d.minutes), 10);
+
+    // Grid lines
+    for (let i = 0; i <= 5; i++) {
+      const y = padding.top + (chartHeight / 5) * i;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', padding.left);
+      line.setAttribute('y1', y);
+      line.setAttribute('x2', width - padding.right);
+      line.setAttribute('y2', y);
+      line.setAttribute('class', 'chart-grid');
+      svg.appendChild(line);
+    }
+
+    // Bars
+    const barWidth = chartWidth / weekData.length;
+    const barGap = barWidth * 0.2;
+    const actualBarWidth = barWidth - barGap;
+
+    weekData.forEach((day, index) => {
+      const barHeight = (day.minutes / maxMinutes) * chartHeight;
+      const x = padding.left + (index * barWidth) + (barGap / 2);
+      const y = height - padding.bottom - barHeight;
+
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', y);
+      rect.setAttribute('width', actualBarWidth);
+      rect.setAttribute('height', barHeight);
+      rect.setAttribute('class', 'chart-bar');
+      rect.setAttribute('rx', '4');
+
+      if (day.date === today) {
+        rect.classList.add('today');
+      }
+
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = `${day.label}: ${day.minutes} min`;
+      rect.appendChild(title);
+      svg.appendChild(rect);
+
+      // Value label
+      if (day.minutes > 0) {
+        const valueLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        valueLabel.setAttribute('x', x + actualBarWidth / 2);
+        valueLabel.setAttribute('y', y - 4);
+        valueLabel.setAttribute('text-anchor', 'middle');
+        valueLabel.setAttribute('class', 'chart-value');
+        valueLabel.textContent = day.minutes;
+        svg.appendChild(valueLabel);
+      }
+
+      // Day label
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', x + actualBarWidth / 2);
+      label.setAttribute('y', height - 10);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('class', 'chart-label');
+      label.textContent = day.label;
+      svg.appendChild(label);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(svg);
+  }
+
+  /**
+   * Render 30-day calendar heatmap
+   */
+  renderCalendarHeatmap() {
+    const container = document.getElementById('calendarHeatmap');
+    if (!container) return;
+
+    const calendarData = this.storage.getCalendarData(30);
+    const today = new Date().toISOString().split('T')[0];
+
+    container.innerHTML = '';
+
+    calendarData.forEach(day => {
+      const dayEl = document.createElement('div');
+      dayEl.className = 'calendar-day';
+
+      // Calculate intensity level (0-4)
+      let level = 0;
+      if (day.minutes === 0) level = 0;
+      else if (day.minutes <= 10) level = 1;
+      else if (day.minutes <= 20) level = 2;
+      else if (day.minutes <= 30) level = 3;
+      else level = 4;
+
+      dayEl.classList.add(`level-${level}`);
+
+      if (day.date === today) {
+        dayEl.classList.add('today');
+      }
+
+      // Tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'calendar-tooltip';
+      const date = new Date(day.date);
+      const dateStr = date.toLocaleDateString(this.i18n.getLocale(), { month: 'short', day: 'numeric' });
+      tooltip.textContent = day.minutes === 0
+        ? `${dateStr}: Bez aktivity`
+        : `${dateStr}: ${day.minutes} min (${day.sessions} sezení)`;
+
+      dayEl.appendChild(tooltip);
+      container.appendChild(dayEl);
+    });
   }
 
   /**

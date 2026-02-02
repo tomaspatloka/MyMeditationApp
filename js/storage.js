@@ -19,7 +19,8 @@ class StorageManager {
         backgroundSound: 'none',
         backgroundVolume: 0.3,
         notifications: false,
-        keepAwake: true
+        keepAwake: true,
+        lightMode: false
       },
       sessions: [],
       stats: {

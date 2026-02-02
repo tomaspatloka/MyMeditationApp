@@ -42,7 +42,11 @@
     "totalMinutes": "Total Minutes",
     "longestStreak": "Longest Streak",
     "progress": "Your Progress",
-    "days": "days"
+    "days": "days",
+    "weeklyProgress": "Weekly Progress",
+    "calendar": "Meditation Calendar (30 days)",
+    "legend": "Intensity",
+    "noActivity": "No activity"
   },
   "settings": {
     "title": "Settings",
@@ -50,6 +54,7 @@
     "bellSound": "Bell Sound",
     "notifications": "Enable Notifications",
     "keepAwake": "Keep screen awake during meditation",
+    "lightMode": "Light Mode",
     "about": "About",
     "checkUpdate": "Check for Updates",
     "forceUpdate": "Update Now"

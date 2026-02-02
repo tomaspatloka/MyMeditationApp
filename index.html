@@ -181,32 +181,72 @@
                     <div class="stats-grid">
                         <div class="stat-card">
                             <span class="material-symbols-outlined stat-icon">local_fire_department</span>
-                            <div class="stat-value" id="statStreak">0</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="statStreak">0</div>
+                                <div class="stat-trend" id="statStreakTrend"></div>
+                            </div>
                             <div class="stat-label" data-i18n="stats.currentStreak">Aktuální série</div>
                         </div>
 
                         <div class="stat-card">
                             <span class="material-symbols-outlined stat-icon">event_repeat</span>
-                            <div class="stat-value" id="statSessions">0</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="statSessions">0</div>
+                                <div class="stat-trend" id="statSessionsTrend"></div>
+                            </div>
                             <div class="stat-label" data-i18n="stats.totalSessions">Celkem sezení</div>
                         </div>
 
                         <div class="stat-card">
                             <span class="material-symbols-outlined stat-icon">schedule</span>
-                            <div class="stat-value" id="statMinutes">0</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="statMinutes">0</div>
+                                <div class="stat-trend" id="statMinutesTrend"></div>
+                            </div>
                             <div class="stat-label" data-i18n="stats.totalMinutes">Celkem minut</div>
                         </div>
 
                         <div class="stat-card">
                             <span class="material-symbols-outlined stat-icon">emoji_events</span>
-                            <div class="stat-value" id="statLongest">0</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="statLongest">0</div>
+                                <div class="stat-trend" id="statLongestTrend"></div>
+                            </div>
                             <div class="stat-label" data-i18n="stats.longestStreak">Nejdelší série</div>
+                        </div>
+                    </div>
+
+                    <div class="card weekly-chart-section">
+                        <h3 data-i18n="stats.weeklyProgress">
+                            <span class="material-symbols-outlined">trending_up</span>
+                            Týdenní pokrok
+                        </h3>
+                        <div class="chart-container">
+                            <div id="weeklyChart"></div>
+                        </div>
+                    </div>
+
+                    <div class="card calendar-section">
+                        <h3 data-i18n="stats.calendar">
+                            <span class="material-symbols-outlined">calendar_month</span>
+                            Kalendář meditací (30 dní)
+                        </h3>
+                        <div id="calendarHeatmap" class="calendar-heatmap"></div>
+                        <div class="calendar-legend">
+                            <span class="legend-label" data-i18n="stats.legend">Intenzita:</span>
+                            <div class="legend-scale">
+                                <span class="legend-box level-0" title="0 min"></span>
+                                <span class="legend-box level-1" title="1-10 min"></span>
+                                <span class="legend-box level-2" title="11-20 min"></span>
+                                <span class="legend-box level-3" title="21-30 min"></span>
+                                <span class="legend-box level-4" title="31+ min"></span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="card progress-section">
                         <h3 data-i18n="stats.progress">
-                            <span class="material-symbols-outlined">trending_up</span>
+                            <span class="material-symbols-outlined">emoji_events</span>
                             Váš postup
                         </h3>
                         <div class="progress-badge">
@@ -259,6 +299,14 @@
                             <input type="checkbox" id="settingsKeepAwake" checked>
                             <span class="material-symbols-outlined checkbox-icon">lightbulb</span>
                             <span data-i18n="settings.keepAwake">Udržet displej aktivní během meditace</span>
+                        </label>
+                    </div>
+
+                    <div class="card settings-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="settingsTheme">
+                            <span class="material-symbols-outlined checkbox-icon">light_mode</span>
+                            <span data-i18n="settings.lightMode">Světlý režim</span>
                         </label>
                     </div>
 

@@ -42,7 +42,11 @@
     "totalMinutes": "Celkem minut",
     "longestStreak": "Nejdelší série",
     "progress": "Váš postup",
-    "days": "dní"
+    "days": "dní",
+    "weeklyProgress": "Týdenní pokrok",
+    "calendar": "Kalendář meditací (30 dní)",
+    "legend": "Intenzita",
+    "noActivity": "Bez aktivity"
   },
   "settings": {
     "title": "Nastavení",
@@ -50,6 +54,7 @@
     "bellSound": "Zvuk zvonku",
     "notifications": "Povolit notifikace",
     "keepAwake": "Udržet displej aktivní během meditace",
+    "lightMode": "Světlý režim",
     "about": "O aplikaci",
     "checkUpdate": "Zkontrolovat aktualizace",
     "forceUpdate": "Aktualizovat nyní"
