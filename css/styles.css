@@ -1,31 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
-    /* MD3 Color Palette (Indigo/Teal meditation theme) */
-    --md-sys-color-primary: #3f51b5;
+    /* MD3 Dark Theme - Meditation (původní tmavé barvy) */
+    --md-sys-color-primary: #667eea;
     --md-sys-color-on-primary: #ffffff;
-    --md-sys-color-primary-container: #e8eaf6;
-    --md-sys-color-on-primary-container: #1a237e;
+    --md-sys-color-primary-container: #283593;
+    --md-sys-color-on-primary-container: #e8eaf6;
 
-    --md-sys-color-secondary: #009688;
+    --md-sys-color-secondary: #764ba2;
     --md-sys-color-on-secondary: #ffffff;
-    --md-sys-color-secondary-container: #e0f2f1;
-    --md-sys-color-on-secondary-container: #004d40;
+    --md-sys-color-secondary-container: #4a148c;
+    --md-sys-color-on-secondary-container: #e1bee7;
 
     --md-sys-color-tertiary: #ef5350;
 
-    --md-sys-color-background: #fdfbff;
-    --md-sys-color-on-background: #1b1b1f;
+    --md-sys-color-background: #1a1a2e;
+    --md-sys-color-on-background: #eeeef0;
 
-    --md-sys-color-surface: #fdfbff;
-    --md-sys-color-on-surface: #1b1b1f;
-    --md-sys-color-surface-variant: #e1e2ec;
-    --md-sys-color-on-surface-variant: #44474f;
-    --md-sys-color-outline: #74777f;
-    --md-sys-color-outline-variant: #c4c6d0;
+    --md-sys-color-surface: #16213e;
+    --md-sys-color-on-surface: #eeeef0;
+    --md-sys-color-surface-variant: #0f1624;
+    --md-sys-color-on-surface-variant: #bbbbc0;
+    --md-sys-color-outline: #8e9099;
+    --md-sys-color-outline-variant: #44474f;
 
-    --md-sys-color-success: #4caf50;
-    --md-sys-color-error: #ba1a1a;
+    --md-sys-color-success: #4ade80;
+    --md-sys-color-error: #ef4444;
     --md-sys-color-on-error: #ffffff;
 
     /* MD3 Elevations */
@@ -49,30 +49,30 @@
     --font-body: 'Roboto', sans-serif;
 }
 
-/* Dark Mode Variables */
-body.dark-mode {
-    --md-sys-color-primary: #9fa8da;
-    --md-sys-color-on-primary: #1a237e;
-    --md-sys-color-primary-container: #283593;
-    --md-sys-color-on-primary-container: #e8eaf6;
+/* Light Mode Variables (volitelné) */
+body.light-mode {
+    --md-sys-color-primary: #3f51b5;
+    --md-sys-color-on-primary: #ffffff;
+    --md-sys-color-primary-container: #e8eaf6;
+    --md-sys-color-on-primary-container: #1a237e;
 
-    --md-sys-color-secondary: #80cbc4;
-    --md-sys-color-on-secondary: #004d40;
-    --md-sys-color-secondary-container: #00695c;
-    --md-sys-color-on-secondary-container: #e0f2f1;
+    --md-sys-color-secondary: #009688;
+    --md-sys-color-on-secondary: #ffffff;
+    --md-sys-color-secondary-container: #e0f2f1;
+    --md-sys-color-on-secondary-container: #004d40;
 
-    --md-sys-color-background: #1b1b1f;
-    --md-sys-color-on-background: #e3e2e6;
+    --md-sys-color-background: #fdfbff;
+    --md-sys-color-on-background: #1b1b1f;
 
-    --md-sys-color-surface: #1b1b1f;
-    --md-sys-color-on-surface: #e3e2e6;
-    --md-sys-color-surface-variant: #44474f;
-    --md-sys-color-on-surface-variant: #c4c6d0;
-    --md-sys-color-outline: #8e9099;
-    --md-sys-color-outline-variant: #44474f;
+    --md-sys-color-surface: #fdfbff;
+    --md-sys-color-on-surface: #1b1b1f;
+    --md-sys-color-surface-variant: #e1e2ec;
+    --md-sys-color-on-surface-variant: #44474f;
+    --md-sys-color-outline: #74777f;
+    --md-sys-color-outline-variant: #c4c6d0;
 
-    --md-sys-color-error: #ffb4ab;
-    --md-sys-color-on-error: #690005;
+    --md-sys-color-error: #ba1a1a;
+    --md-sys-color-on-error: #ffffff;
 }
 
 * {
