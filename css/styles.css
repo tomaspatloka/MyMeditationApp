@@ -188,8 +188,20 @@ body {
 /* === Tabs === */
 .tabs-container {
     background-color: var(--md-sys-color-surface);
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
     overflow: hidden;
+    order: 3;
+}
+
+.tabs-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 600px;
+    margin: 0 auto;
+    z-index: 10;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .tabs-scroll {
@@ -231,12 +243,12 @@ body {
 .tab.active::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
     height: 3px;
     background-color: var(--md-sys-color-primary);
-    border-radius: 3px 3px 0 0;
+    border-radius: 0 0 3px 3px;
 }
 
 /* === Main Content === */
@@ -245,7 +257,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     padding: var(--spacing-md);
-    padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
 }
 
 .view {
