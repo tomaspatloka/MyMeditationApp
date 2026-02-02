@@ -147,25 +147,29 @@ class MeditationApp {
       });
     });
 
-    // Settings button
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-      this.openSettings();
-    });
-
-    // Close settings button
-    document.getElementById('closeSettings').addEventListener('click', () => {
-      this.closeSettings();
-    });
+    // Close settings button (pokud existuje v overlay verzi)
+    const closeSettingsBtn = document.getElementById('closeSettings');
+    if (closeSettingsBtn) {
+      closeSettingsBtn.addEventListener('click', () => {
+        this.closeSettings();
+      });
+    }
 
     // Check for updates button
-    document.getElementById('checkUpdateBtn').addEventListener('click', () => {
-      this.checkForUpdates();
-    });
+    const checkUpdateBtn = document.getElementById('checkUpdateBtn');
+    if (checkUpdateBtn) {
+      checkUpdateBtn.addEventListener('click', () => {
+        this.checkForUpdates();
+      });
+    }
 
     // Force update button
-    document.getElementById('forceUpdateBtn').addEventListener('click', () => {
-      this.forceUpdate();
-    });
+    const forceUpdateBtn = document.getElementById('forceUpdateBtn');
+    if (forceUpdateBtn) {
+      forceUpdateBtn.addEventListener('click', () => {
+        this.forceUpdate();
+      });
+    }
 
     // Timer duration buttons
     document.querySelectorAll('.duration-btn').forEach(btn => {
@@ -248,14 +252,8 @@ class MeditationApp {
    * Switch between views
    */
   switchView(viewName) {
-    // Don't show settings view via tabs
-    if (viewName === 'settings') {
-      this.openSettings();
-      return;
-    }
-
-    // Hide all views (except settings)
-    document.querySelectorAll('.view:not(.settings-overlay)').forEach(view => {
+    // Hide all views
+    document.querySelectorAll('.view').forEach(view => {
       view.classList.remove('active');
     });
 
@@ -277,22 +275,6 @@ class MeditationApp {
     if (viewName === 'stats') {
       this.updateStatsView();
     }
-  }
-
-  /**
-   * Open settings overlay
-   */
-  openSettings() {
-    document.getElementById('view-settings').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Close settings overlay
-   */
-  closeSettings() {
-    document.getElementById('view-settings').classList.remove('active');
-    document.body.style.overflow = '';
   }
 
   /**
