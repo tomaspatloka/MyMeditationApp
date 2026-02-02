@@ -1,0 +1,50 @@
+# Cloudflare Pages Headers Configuration
+
+# Global security headers
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# Manifest file
+/manifest.json
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=86400
+
+# Service Worker - no cache
+/sw.js
+  Content-Type: application/javascript
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Audio files - long cache
+/audio/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# CSS files - long cache with revalidation
+/css/*
+  Content-Type: text/css
+  Cache-Control: public, max-age=31536000
+  Access-Control-Allow-Origin: *
+
+# JavaScript files - long cache with revalidation
+/js/*
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=31536000
+  Access-Control-Allow-Origin: *
+
+# Locale files
+/locales/*
+  Content-Type: application/json
+  Cache-Control: public, max-age=86400
+
+# Icons and images
+/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# HTML - no cache (for updates)
+/*.html
+  Cache-Control: no-cache, must-revalidate

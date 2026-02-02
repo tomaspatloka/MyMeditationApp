@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Meditační aplikace",
+    "tagline": "Najděte svůj vnitřní klid"
+  },
+  "nav": {
+    "timer": "Timer",
+    "breathing": "Dýchání",
+    "stats": "Statistiky",
+    "settings": "Nastavení"
+  },
+  "timer": {
+    "start": "Spustit",
+    "pause": "Pozastavit",
+    "resume": "Pokračovat",
+    "stop": "Zastavit",
+    "complete": "Meditace dokončena",
+    "notification": "Vaše meditační sezení skončilo. Skvělá práce!"
+  },
+  "breathing": {
+    "inhale": "Nádech",
+    "exhale": "Výdech",
+    "hold": "Zadržet",
+    "prepare": "Připravte se",
+    "start": "Začít",
+    "stop": "Zastavit",
+    "pattern": "Technika"
+  },
+  "audio": {
+    "background": "Podkresová hudba",
+    "volume": "Hlasitost",
+    "none": "Žádný",
+    "rain": "Déšť",
+    "ocean": "Oceán",
+    "forest": "Les"
+  },
+  "stats": {
+    "title": "Vaše statistiky",
+    "currentStreak": "Aktuální série",
+    "totalSessions": "Celkem sezení",
+    "totalMinutes": "Celkem minut",
+    "longestStreak": "Nejdelší série",
+    "progress": "Váš postup",
+    "days": "dní"
+  },
+  "settings": {
+    "title": "Nastavení",
+    "language": "Jazyk",
+    "bellSound": "Zvuk zvonku",
+    "notifications": "Povolit notifikace",
+    "keepAwake": "Udržet displej aktivní během meditace",
+    "about": "O aplikaci"
+  },
+  "badges": {
+    "seed": {
+      "name": "Sémě",
+      "desc": "Začínáte svou cestu"
+    },
+    "sprout": {
+      "name": "Klíček",
+      "desc": "Budujete základy"
+    },
+    "growth": {
+      "name": "Růst",
+      "desc": "Pravidelný praktik"
+    },
+    "bloom": {
+      "name": "Rozkvět",
+      "desc": "Pokročilý praktik"
+    }
+  }
+}

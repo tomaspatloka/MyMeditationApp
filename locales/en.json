@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Meditation App",
+    "tagline": "Find your inner peace"
+  },
+  "nav": {
+    "timer": "Timer",
+    "breathing": "Breathing",
+    "stats": "Stats",
+    "settings": "Settings"
+  },
+  "timer": {
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "complete": "Meditation Complete",
+    "notification": "Your meditation session is complete. Great work!"
+  },
+  "breathing": {
+    "inhale": "Breathe In",
+    "exhale": "Breathe Out",
+    "hold": "Hold",
+    "prepare": "Get Ready",
+    "start": "Start",
+    "stop": "Stop",
+    "pattern": "Technique"
+  },
+  "audio": {
+    "background": "Background Sound",
+    "volume": "Volume",
+    "none": "None",
+    "rain": "Rain",
+    "ocean": "Ocean",
+    "forest": "Forest"
+  },
+  "stats": {
+    "title": "Your Statistics",
+    "currentStreak": "Current Streak",
+    "totalSessions": "Total Sessions",
+    "totalMinutes": "Total Minutes",
+    "longestStreak": "Longest Streak",
+    "progress": "Your Progress",
+    "days": "days"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "bellSound": "Bell Sound",
+    "notifications": "Enable Notifications",
+    "keepAwake": "Keep screen awake during meditation",
+    "about": "About"
+  },
+  "badges": {
+    "seed": {
+      "name": "Seed",
+      "desc": "Beginning your journey"
+    },
+    "sprout": {
+      "name": "Sprout",
+      "desc": "Building foundations"
+    },
+    "growth": {
+      "name": "Growth",
+      "desc": "Regular practitioner"
+    },
+    "bloom": {
+      "name": "Bloom",
+      "desc": "Advanced practitioner"
+    }
+  }
+}

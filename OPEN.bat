@@ -1,0 +1,3 @@
+@echo off
+echo Oteviram aplikaci v prohlizeci...
+start http://localhost:8000

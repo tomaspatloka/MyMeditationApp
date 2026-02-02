@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python check_files.py:*)",
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(start cmd /k \"python -m http.server 8000\")",
+      "Bash(timeout:*)",
+      "Bash(start:*)",
+      "Bash(curl:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
