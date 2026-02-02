@@ -412,11 +412,29 @@ class MeditationApp {
 
     if (soundName === 'none') return;
 
-    // For MVP, we'll generate ambient sounds with Web Audio
-    // In production, you would load actual audio files here
+    // Load and play audio file
     console.log(`[App] Background sound: ${soundName}`);
 
     const volume = document.getElementById('bgVolume').value / 100;
+
+    // Map sound names to audio files
+    const audioFiles = {
+      'meditation': './audio/meditation.mp3',
+      'rain': './audio/rain.mp3',
+      'ocean': './audio/ocean.mp3',
+      'forest': './audio/forest.mp3'
+    };
+
+    const audioFile = audioFiles[soundName];
+    if (audioFile) {
+      try {
+        await this.audio.loadTrack('background', audioFile);
+        this.audio.playTrack('background', { loop: true, volume: volume, fadeIn: 2 });
+      } catch (error) {
+        console.error(`[App] Error loading ${soundName}:`, error);
+      }
+    }
+
     this.storage.setPreference('backgroundSound', soundName);
     this.storage.setPreference('backgroundVolume', volume);
   }
