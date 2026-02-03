@@ -67,6 +67,11 @@ class MeditationAudio {
 
     try {
       const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
 
@@ -77,8 +82,17 @@ class MeditationAudio {
         gainNode: null,
         volume: 0.5
       };
+
+      console.log(`[Audio] Successfully loaded track: ${name}`);
     } catch (error) {
-      console.error(`Error loading track ${name}:`, error);
+      console.error(`[Audio] Error loading track ${name}:`, error);
+
+      // Show user-friendly error notification
+      if (window.showNotification) {
+        window.showNotification('Nepodařilo se načíst audio soubor', 'warning');
+      }
+
+      throw error; // Re-throw for caller to handle
     }
   }
 

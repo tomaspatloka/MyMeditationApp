@@ -192,13 +192,53 @@ class I18n {
       const key = el.getAttribute('data-i18n');
       const translation = this.t(key);
 
-      if (translation) {
-        // Update text content
-        if (el.tagName === 'INPUT' && el.type === 'button') {
-          el.value = translation;
-        } else if (el.tagName === 'INPUT' && el.placeholder !== undefined) {
-          el.placeholder = translation;
+      // Skip if translation is the same as key (not found)
+      if (translation === key) {
+        console.warn(`[i18n] Skipping update for missing translation: ${key}`);
+        return;
+      }
+
+      // Update text content
+      if (el.tagName === 'INPUT' && el.type === 'button') {
+        el.value = translation;
+      } else if (el.tagName === 'INPUT' && el.placeholder !== undefined) {
+        el.placeholder = translation;
+      } else {
+        // For elements with child nodes (like buttons with icons), only update text nodes
+        const hasChildElements = el.children.length > 0;
+
+        if (hasChildElements) {
+          // Find and update text nodes only, preserving icons/other elements
+          let textNodeFound = false;
+          for (let node of el.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              // Skip empty text nodes
+              if (node.textContent.trim()) {
+                node.textContent = translation;
+                textNodeFound = true;
+                break;
+              }
+            } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'SPAN' && !node.classList.contains('material-symbols-outlined')) {
+              // Update non-icon span elements
+              node.textContent = translation;
+              textNodeFound = true;
+              break;
+            }
+          }
+
+          // If no suitable text node found, append translation as text
+          if (!textNodeFound) {
+            // Check if last child is a text node we can update
+            const lastChild = el.lastChild;
+            if (lastChild && lastChild.nodeType === Node.TEXT_NODE) {
+              lastChild.textContent = translation;
+            } else {
+              // Append new text node
+              el.appendChild(document.createTextNode(translation));
+            }
+          }
         } else {
+          // No child elements, safe to replace textContent
           el.textContent = translation;
         }
       }

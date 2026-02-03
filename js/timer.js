@@ -145,10 +145,47 @@ class MeditationTimer {
           requireInteraction: false,
           silent: false
         });
+        return; // Success, no need for fallback
       } catch (error) {
         console.log('Notification error:', error);
+        // Fall through to in-app notification
       }
     }
+
+    // Fallback: Show in-app notification
+    this.showInAppNotification();
+  }
+
+  /**
+   * Show in-app notification as fallback
+   */
+  showInAppNotification() {
+    const notificationEl = document.createElement('div');
+    notificationEl.className = 'in-app-notification success';
+    notificationEl.innerHTML = `
+      <span class="material-symbols-outlined">check_circle</span>
+      <div>
+        <strong>Meditace dokončena</strong>
+        <p>Vaše meditační sezení skončilo. Skvělá práce!</p>
+      </div>
+    `;
+
+    document.body.appendChild(notificationEl);
+
+    // Add CSS class for animation
+    setTimeout(() => notificationEl.classList.add('show'), 10);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      notificationEl.classList.remove('show');
+      setTimeout(() => notificationEl.remove(), 300);
+    }, 5000);
+
+    // Click to dismiss
+    notificationEl.addEventListener('click', () => {
+      notificationEl.classList.remove('show');
+      setTimeout(() => notificationEl.remove(), 300);
+    });
   }
 
   /**

@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./css/timer.css">
     <link rel="stylesheet" href="./css/breathing.css">
+    <link rel="stylesheet" href="./css/notifications.css">
 </head>
 
 <body>
@@ -56,12 +57,12 @@
                             <svg class="progress-ring" width="220" height="220">
                                 <defs>
                                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#3f51b5"/>
-                                        <stop offset="100%" stop-color="#009688"/>
+                                        <stop offset="0%" stop-color="#3f51b5" />
+                                        <stop offset="100%" stop-color="#009688" />
                                     </linearGradient>
                                 </defs>
-                                <circle class="progress-ring-bg" cx="110" cy="110" r="95"/>
-                                <circle class="progress-ring-fill" cx="110" cy="110" r="95"/>
+                                <circle class="progress-ring-bg" cx="110" cy="110" r="95" />
+                                <circle class="progress-ring-fill" cx="110" cy="110" r="95" />
                             </svg>
                             <div class="timer-time" id="timerDisplay">10:00</div>
                         </div>
@@ -76,11 +77,13 @@
                     </div>
 
                     <div class="timer-controls">
-                        <button id="timerStart" class="btn btn-primary" data-i18n="timer.start">
+                        <button id="timerStart" class="btn btn-primary" data-i18n="timer.start"
+                            aria-label="Spustit meditaci">
                             <span class="material-symbols-outlined">play_arrow</span>
                             <span>Spustit</span>
                         </button>
-                        <button id="timerPause" class="btn btn-secondary hidden" data-i18n="timer.pause">
+                        <button id="timerPause" class="btn btn-secondary hidden" data-i18n="timer.pause"
+                            aria-label="Pozastavit meditaci">
                             <span class="material-symbols-outlined">pause</span>
                             <span>Pozastavit</span>
                         </button>
@@ -163,7 +166,8 @@
                     </div>
 
                     <div class="breathing-controls">
-                        <button id="breathingStart" class="btn btn-primary" data-i18n="breathing.start">
+                        <button id="breathingStart" class="btn btn-primary" data-i18n="breathing.start"
+                            aria-label="Začít dechové cvičení">
                             <span class="material-symbols-outlined">play_arrow</span>
                             <span>Začít</span>
                         </button>
@@ -267,7 +271,7 @@
                             <span class="material-symbols-outlined">language</span>
                             <span data-i18n="settings.language">Jazyk</span>
                         </label>
-                        <select id="settingsLang">
+                        <select id="settingsLang" aria-label="Vybrat jazyk aplikace">
                             <option value="cs">Čeština</option>
                             <option value="en">English</option>
                         </select>
@@ -327,7 +331,8 @@
                             <span class="material-symbols-outlined">refresh</span>
                             <span data-i18n="settings.checkUpdate">Zkontrolovat aktualizace</span>
                         </button>
-                        <button id="forceUpdateBtn" class="btn btn-primary hidden" style="margin-top: 8px; width: 100%;">
+                        <button id="forceUpdateBtn" class="btn btn-primary hidden"
+                            style="margin-top: 8px; width: 100%;">
                             <span class="material-symbols-outlined">system_update</span>
                             <span data-i18n="settings.forceUpdate">Aktualizovat nyní</span>
                         </button>

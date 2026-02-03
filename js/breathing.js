@@ -59,6 +59,14 @@ class BreathingExercise {
    * @param {string} patternName - Name of the breathing pattern
    */
   async start(patternName) {
+    // Guard against starting multiple sessions
+    if (this.isRunning) {
+      console.warn('[Breathing] Already running, stopping current session first');
+      this.stop();
+      // Add small delay to ensure clean state
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
     const pattern = this.patterns[patternName];
     if (!pattern) {
       console.error('Unknown pattern:', patternName);

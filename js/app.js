@@ -31,6 +31,7 @@ class MeditationApp {
 
       // Make i18n globally available
       window.i18n = this.i18n;
+      window.showNotification = this.showInAppNotification.bind(this);
       window.meditationAudio = this.audio;
 
       // Initialize i18n
@@ -57,9 +58,17 @@ class MeditationApp {
       // Display version
       this.displayVersion();
 
+      // Setup global error handler
+      this.setupGlobalErrorHandler();
+
       console.log('[App] Initialization complete');
     } catch (error) {
       console.error('[App] Initialization error:', error);
+      this.showInAppNotification(
+        'Chyba inicializace',
+        'Aplikace se nepodařilo správně načíst. Zkuste obnovit stránku.',
+        'error'
+      );
     }
   }
 
@@ -109,6 +118,15 @@ class MeditationApp {
 
     // Set initial breathing pattern info
     this.updateBreathingInfo();
+
+    // Initialize SVG progress ring
+    const progressRing = document.querySelector('.progress-ring-fill');
+    if (progressRing) {
+      const radius = 95;
+      const circumference = 2 * Math.PI * radius;
+      progressRing.style.strokeDasharray = circumference;
+      progressRing.style.strokeDashoffset = circumference;
+    }
   }
 
   /**
@@ -242,6 +260,31 @@ class MeditationApp {
 
     document.getElementById('settingsTheme').addEventListener('change', (e) => {
       this.toggleTheme(e.target.checked);
+    });
+
+    // Background sound controls
+    document.querySelectorAll('input[name="bgSound"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          this.changeBgSound(e.target.value);
+        }
+      });
+    });
+
+    // Volume control
+    const volumeSlider = document.getElementById('bgVolume');
+    const volumeValue = document.getElementById('volumeValue');
+
+    volumeSlider.addEventListener('input', (e) => {
+      const volume = e.target.value;
+      volumeValue.textContent = `${volume}%`;
+
+      // Update volume if audio is playing
+      if (this.audio.isPlaying('background')) {
+        this.audio.setVolume('background', volume / 100);
+      }
+
+      this.storage.setPreference('backgroundVolume', volume / 100);
     });
 
     // Timer callbacks
@@ -463,13 +506,67 @@ class MeditationApp {
       try {
         await this.audio.loadTrack('background', audioFile);
         this.audio.playTrack('background', { loop: true, volume: volume, fadeIn: 2 });
+
+        // Save preferences on success
+        this.storage.setPreference('backgroundSound', soundName);
+        this.storage.setPreference('backgroundVolume', volume);
       } catch (error) {
         console.error(`[App] Error loading ${soundName}:`, error);
+
+        // Show user-friendly error message
+        this.showInAppNotification(
+          'Nepodařilo se přehrát audio',
+          `Soubor ${soundName}.mp3 není dostupný. Zkuste jiný zvuk.`,
+          'warning'
+        );
+
+        // Reset selection to "none"
+        document.querySelector('input[name="bgSound"][value="none"]').checked = true;
       }
     }
+  }
 
-    this.storage.setPreference('backgroundSound', soundName);
-    this.storage.setPreference('backgroundVolume', volume);
+  /**
+   * Show in-app notification
+   */
+  showInAppNotification(title, message, type = 'info') {
+    // Remove existing notifications
+    document.querySelectorAll('.in-app-notification').forEach(n => n.remove());
+
+    const notificationEl = document.createElement('div');
+    notificationEl.className = `in-app-notification ${type}`;
+
+    const icons = {
+      success: 'check_circle',
+      warning: 'warning',
+      error: 'error',
+      info: 'info'
+    };
+
+    notificationEl.innerHTML = `
+      <span class="material-symbols-outlined">${icons[type] || 'info'}</span>
+      <div>
+        <strong>${title}</strong>
+        ${message ? `<p>${message}</p>` : ''}
+      </div>
+    `;
+
+    document.body.appendChild(notificationEl);
+
+    // Add CSS class for animation
+    setTimeout(() => notificationEl.classList.add('show'), 10);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      notificationEl.classList.remove('show');
+      setTimeout(() => notificationEl.remove(), 300);
+    }, 5000);
+
+    // Click to dismiss
+    notificationEl.addEventListener('click', () => {
+      notificationEl.classList.remove('show');
+      setTimeout(() => notificationEl.remove(), 300);
+    });
   }
 
   /**
@@ -850,6 +947,41 @@ class MeditationApp {
       // Just reload if no waiting worker
       window.location.reload();
     }
+  }
+
+  /**
+   * Setup global error handler
+   */
+  setupGlobalErrorHandler() {
+    window.addEventListener('error', (event) => {
+      console.error('[Global Error]', event.error);
+
+      // Filter out common non-critical errors
+      const ignoredErrors = ['ResizeObserver', 'Non-Error promise rejection'];
+      const shouldIgnore = ignoredErrors.some(err =>
+        event.error && event.error.message && event.error.message.includes(err)
+      );
+
+      if (!shouldIgnore && event.error && event.error.message) {
+        this.showInAppNotification(
+          'Došlo k chybě',
+          'Aplikace narazila na problém. Zkuste obnovit stránku.',
+          'error'
+        );
+      }
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('[Unhandled Promise Rejection]', event.reason);
+
+      if (event.reason && event.reason.message) {
+        this.showInAppNotification(
+          'Chyba při zpracování',
+          'Některá operace selhala. Zkuste to znovu.',
+          'warning'
+        );
+      }
+    });
   }
 }
 

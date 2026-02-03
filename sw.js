@@ -12,6 +12,7 @@ const PRECACHE_ASSETS = [
   './css/styles.css',
   './css/timer.css',
   './css/breathing.css',
+  './css/notifications.css',
   './js/app.js',
   './js/timer.js',
   './js/audio.js',
@@ -39,14 +40,6 @@ self.addEventListener('install', event => {
         console.error('[SW] Precaching failed:', error);
       })
   );
-});
-
-// Message event - handle skip waiting
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log('[SW] Skip waiting requested');
-    self.skipWaiting();
-  }
 });
 
 // Activate event - clean up old caches
