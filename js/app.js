@@ -720,11 +720,13 @@ class MeditationApp {
     const weekData = this.getWeeklyData();
     const today = new Date().toISOString().split('T')[0];
 
-    const width = container.parentElement.clientWidth - 16;
+    // Ensure minimum width to prevent negative values
+    const containerWidth = container.parentElement.clientWidth;
+    const width = Math.max(containerWidth - 16, 200);
     const height = 200;
     const padding = { top: 20, right: 10, bottom: 30, left: 30 };
-    const chartWidth = width - padding.left - padding.right;
-    const chartHeight = height - padding.top - padding.bottom;
+    const chartWidth = Math.max(width - padding.left - padding.right, 100);
+    const chartHeight = Math.max(height - padding.top - padding.bottom, 100);
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', width);
@@ -744,10 +746,10 @@ class MeditationApp {
       svg.appendChild(line);
     }
 
-    // Bars
-    const barWidth = chartWidth / weekData.length;
-    const barGap = barWidth * 0.2;
-    const actualBarWidth = barWidth - barGap;
+    // Bars - ensure positive values
+    const barWidth = Math.max(chartWidth / weekData.length, 10);
+    const barGap = Math.min(barWidth * 0.2, 2);
+    const actualBarWidth = Math.max(barWidth - barGap, 5);
 
     weekData.forEach((day, index) => {
       const barHeight = (day.minutes / maxMinutes) * chartHeight;
