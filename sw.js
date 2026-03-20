@@ -1,5 +1,5 @@
 // Service Worker for Meditation PWA
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const CACHE_NAME = `meditation-v${VERSION}`;
 const AUDIO_CACHE = 'meditation-audio-v1';
 

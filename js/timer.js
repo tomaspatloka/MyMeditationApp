@@ -11,6 +11,8 @@ class MeditationTimer {
     this.onTick = null;
     this.onComplete = null;
     this.wakeLock = null;
+    this.totalElapsed = 0;
+    this.sessionStart = 0;
   }
 
   /**
@@ -23,6 +25,8 @@ class MeditationTimer {
     this.startTime = performance.now();
     this.isRunning = true;
     this.isPaused = false;
+    this.totalElapsed = 0;
+    this.sessionStart = performance.now();
     this.tick();
     this.requestWakeLock();
   }
@@ -56,6 +60,7 @@ class MeditationTimer {
   pause() {
     if (!this.isRunning || this.isPaused) return;
 
+    this.totalElapsed += (performance.now() - this.sessionStart);
     this.isRunning = false;
     this.isPaused = true;
     this.pausedTime = this.remaining;
@@ -74,6 +79,7 @@ class MeditationTimer {
   resume() {
     if (!this.isPaused) return;
 
+    this.sessionStart = performance.now();
     this.duration = this.pausedTime;
     this.startTime = performance.now();
     this.isRunning = true;
@@ -86,6 +92,10 @@ class MeditationTimer {
    * Stop the timer completely
    */
   stop() {
+    if (this.isRunning && !this.isPaused) {
+      this.totalElapsed += (performance.now() - this.sessionStart);
+    }
+
     this.isRunning = false;
     this.isPaused = false;
 
@@ -96,6 +106,17 @@ class MeditationTimer {
 
     this.remaining = 0;
     this.releaseWakeLock();
+  }
+
+  /**
+   * Get total elapsed time in seconds (handles pause correctly)
+   * @returns {number} Elapsed seconds
+   */
+  getElapsed() {
+    const extra = (this.isRunning && !this.isPaused)
+      ? (performance.now() - this.sessionStart)
+      : 0;
+    return Math.floor((this.totalElapsed + extra) / 1000);
   }
 
   /**

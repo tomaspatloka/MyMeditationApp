@@ -1,11 +1,19 @@
 {
-  "version": "1.0.0",
-  "buildDate": "2026-02-02",
+  "version": "1.1.0",
+  "buildDate": "2026-03-20",
   "changelog": [
-    "Material Design 3 design systém",
-    "Bottom navigation",
-    "Tmavý theme",
-    "Google Material Icons",
-    "Optimalizace pro mobil"
+    "v1.1.0: Oprava duplicitních event listenerů (bgSound, volume)",
+    "v1.1.0: Elapsed time u přerušených sezení se ukládá správně",
+    "v1.1.0: Odznaky zobrazují text v aktivním jazyce (i18n)",
+    "v1.1.0: Obnovení výběru zvuku pozadí a hlasitosti při načtení",
+    "v1.1.0: Uložení a obnovení techniky dýchání",
+    "v1.1.0: Přidána možnost 45 min délky meditace",
+    "v1.1.0: Soubor bell.mp3 se přehraje když je vybrán jako zvuk zvonku",
+    "v1.1.0: Oprava pádu při chybějícím AudioContext v playBell()",
+    "v1.0.0: Material Design 3 design systém",
+    "v1.0.0: Bottom navigation",
+    "v1.0.0: Tmavý theme",
+    "v1.0.0: Google Material Icons",
+    "v1.0.0: Optimalizace pro mobil"
   ]
 }

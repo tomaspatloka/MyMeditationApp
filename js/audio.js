@@ -288,13 +288,27 @@ class MeditationAudio {
 
     if (bellType === 'none') return;
 
-    // Generate simple bell tone if no audio file available
     if (!this.audioContext) {
       await this.unlock();
     }
 
+    // Play actual bell.mp3 file when bellSound = 'bell'
+    if (bellType === 'bell') {
+      try {
+        await this.loadTrack('bell-file', './audio/bell.mp3');
+        this.playTrack('bell-file', { loop: false, volume: 0.7, fadeIn: 0 });
+        return;
+      } catch (e) {
+        console.log('[Audio] bell.mp3 not available, falling back to synthesized tone');
+        // fall through to synthesized tone below
+      }
+    }
+
     if (this.useFallback) {
-      // Simple beep using oscillator
+      if (!this.audioContext) {
+        console.log('Bell sound not available: no audio context');
+        return;
+      }
       try {
         const beep = this.audioContext.createOscillator();
         const beepGain = this.audioContext.createGain();
@@ -310,18 +324,17 @@ class MeditationAudio {
       return;
     }
 
+    if (!this.audioContext) return;
+
     try {
-      // Generate bell sound using Web Audio API
       const oscillator = this.audioContext.createOscillator();
       const gainNode = this.audioContext.createGain();
 
       oscillator.connect(gainNode);
       gainNode.connect(this.audioContext.destination);
 
-      // Bell frequency
-      oscillator.frequency.value = 528; // "Love frequency"
+      oscillator.frequency.value = 528;
 
-      // Envelope
       const now = this.audioContext.currentTime;
       gainNode.gain.setValueAtTime(0.3, now);
       gainNode.gain.exponentialRampToValueAtTime(0.01, now + 3);

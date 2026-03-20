@@ -10,7 +10,7 @@ class MeditationApp {
     this.currentView = 'timer';
     this.currentDuration = 600; // 10 minutes default
 
-    this.version = '1.0.0';
+    this.version = '1.1.0';
     this.swRegistration = null;
     this.hasUpdate = false;
   }
@@ -156,6 +156,23 @@ class MeditationApp {
       document.body.classList.add('light-mode');
     }
 
+    // Restore background sound selection
+    if (prefs.backgroundSound && prefs.backgroundSound !== 'none') {
+      const radio = document.querySelector(`input[name="bgSound"][value="${prefs.backgroundSound}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    // Restore volume slider
+    const savedVolume = Math.round((prefs.backgroundVolume || 0.3) * 100);
+    document.getElementById('bgVolume').value = savedVolume;
+    document.getElementById('volumeValue').textContent = `${savedVolume}%`;
+
+    // Restore breathing pattern
+    if (prefs.breathingPattern) {
+      const patternSelect = document.getElementById('breathingPattern');
+      if (patternSelect) patternSelect.value = prefs.breathingPattern;
+    }
+
     // Store in localStorage for easy access
     localStorage.setItem('keepAwake', prefs.keepAwake);
   }
@@ -215,7 +232,9 @@ class MeditationApp {
     // Audio controls
     document.querySelectorAll('input[name="bgSound"]').forEach(radio => {
       radio.addEventListener('change', (e) => {
-        this.changeBgSound(e.target.value);
+        if (e.target.checked) {
+          this.changeBgSound(e.target.value);
+        }
       });
     });
 
@@ -225,11 +244,13 @@ class MeditationApp {
       if (this.audio.isPlaying('background')) {
         this.audio.setVolume('background', volume);
       }
+      this.storage.setPreference('backgroundVolume', volume);
     });
 
     // Breathing controls
-    document.getElementById('breathingPattern').addEventListener('change', () => {
+    document.getElementById('breathingPattern').addEventListener('change', (e) => {
       this.updateBreathingInfo();
+      this.storage.setPreference('breathingPattern', e.target.value);
     });
 
     document.getElementById('breathingStart').addEventListener('click', () => this.startBreathing());
@@ -260,31 +281,6 @@ class MeditationApp {
 
     document.getElementById('settingsTheme').addEventListener('change', (e) => {
       this.toggleTheme(e.target.checked);
-    });
-
-    // Background sound controls
-    document.querySelectorAll('input[name="bgSound"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          this.changeBgSound(e.target.value);
-        }
-      });
-    });
-
-    // Volume control
-    const volumeSlider = document.getElementById('bgVolume');
-    const volumeValue = document.getElementById('volumeValue');
-
-    volumeSlider.addEventListener('input', (e) => {
-      const volume = e.target.value;
-      volumeValue.textContent = `${volume}%`;
-
-      // Update volume if audio is playing
-      if (this.audio.isPlaying('background')) {
-        this.audio.setVolume('background', volume / 100);
-      }
-
-      this.storage.setPreference('backgroundVolume', volume / 100);
     });
 
     // Timer callbacks
@@ -408,10 +404,11 @@ class MeditationApp {
    * Stop meditation timer
    */
   stopTimer() {
+    const elapsed = this.timer.getElapsed();
     this.timer.stop();
 
-    // Save partial session
-    this.storage.addSession(this.currentDuration, false);
+    // Save partial session with actual elapsed time
+    this.storage.addSession(elapsed > 0 ? elapsed : this.currentDuration, false);
 
     // Reset UI
     this.resetTimerUI();
@@ -632,8 +629,8 @@ class MeditationApp {
     }));
 
     document.getElementById('badgeIcon').textContent = badge.icon;
-    document.getElementById('badgeName').textContent = badge.name;
-    document.getElementById('badgeDesc').textContent = badge.desc;
+    document.getElementById('badgeName').textContent = this.i18n.t(`badges.${badge.key}.name`);
+    document.getElementById('badgeDesc').textContent = this.i18n.t(`badges.${badge.key}.desc`);
 
     // Render visualizations
     this.renderWeeklyChart();

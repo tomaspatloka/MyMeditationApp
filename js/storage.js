@@ -246,29 +246,13 @@ class StorageManager {
     const { currentStreak, totalSessions } = this.data.stats;
 
     if (currentStreak >= 90 || totalSessions >= 100) {
-      return {
-        icon: '🌸',
-        name: 'Rozkvět',
-        desc: 'Pokročilý praktik'
-      };
+      return { icon: '🌸', key: 'bloom' };
     } else if (currentStreak >= 30 || totalSessions >= 40) {
-      return {
-        icon: '🌳',
-        name: 'Růst',
-        desc: 'Pravidelný praktik'
-      };
+      return { icon: '🌳', key: 'growth' };
     } else if (currentStreak >= 7 || totalSessions >= 8) {
-      return {
-        icon: '🌿',
-        name: 'Klíček',
-        desc: 'Budujete základy'
-      };
+      return { icon: '🌿', key: 'sprout' };
     } else {
-      return {
-        icon: '🌱',
-        name: 'Sémě',
-        desc: 'Začínáte svou cestu'
-      };
+      return { icon: '🌱', key: 'seed' };
     }
   }
 
