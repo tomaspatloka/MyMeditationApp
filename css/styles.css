@@ -840,6 +840,36 @@ body {
     margin-bottom: var(--spacing-xs);
 }
 
+/* Data Management */
+.data-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.data-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+    text-align: left;
+    padding: var(--spacing-md);
+    justify-content: flex-start;
+}
+
+.data-btn .btn-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.data-btn .btn-text small {
+    font-size: 11px;
+    opacity: 0.75;
+    font-weight: 400;
+}
+
 /* Update Status */
 .update-status {
     display: flex;

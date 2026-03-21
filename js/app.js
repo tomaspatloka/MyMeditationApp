@@ -10,7 +10,7 @@ class MeditationApp {
     this.currentView = 'timer';
     this.currentDuration = 600; // 10 minutes default
 
-    this.version = '1.1.0';
+    this.version = '1.2.0';
     this.swRegistration = null;
     this.hasUpdate = false;
   }
@@ -283,6 +283,16 @@ class MeditationApp {
       this.toggleTheme(e.target.checked);
     });
 
+    // Data management
+    document.getElementById('exportDataBtn').addEventListener('click', () => this.exportData());
+    document.getElementById('importDataBtn').addEventListener('click', () => {
+      document.getElementById('importFileInput').click();
+    });
+    document.getElementById('importFileInput').addEventListener('change', (e) => {
+      this.importData(e.target.files[0]);
+    });
+    document.getElementById('resetDataBtn').addEventListener('click', () => this.resetData());
+
     // Timer callbacks
     this.timer.onTick = (time, progress) => {
       this.updateTimerProgress(time, progress);
@@ -296,6 +306,63 @@ class MeditationApp {
     document.addEventListener('click', () => {
       this.audio.unlock();
     }, { once: true });
+  }
+
+  /**
+   * Export meditation data as JSON file download
+   */
+  exportData() {
+    const json = this.storage.export();
+    const date = new Date().toISOString().split('T')[0];
+    const filename = `meditace-data-${date}.json`;
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+    this.showInAppNotification(this.i18n.t('settings.exportSuccess'), '', 'success');
+  }
+
+  /**
+   * Import meditation data from JSON file
+   * @param {File} file - Selected file
+   */
+  importData(file) {
+    if (!file) return;
+    const showImportError = () => this.showInAppNotification(
+      this.i18n.t('settings.importError'),
+      this.i18n.t('settings.importErrorDesc'),
+      'error'
+    );
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const ok = this.storage.import(e.target.result);
+      if (ok) {
+        this.updateStatsView();
+        this.showInAppNotification(this.i18n.t('settings.importSuccess'), '', 'success');
+      } else {
+        showImportError();
+      }
+      // Reset file input so same file can be re-imported
+      document.getElementById('importFileInput').value = '';
+    };
+    reader.onerror = showImportError;
+    reader.readAsText(file);
+  }
+
+  /**
+   * Reset all data after user confirmation
+   */
+  resetData() {
+    const ok = this.storage.reset();
+    if (ok) {
+      this.updateStatsView();
+      this.showInAppNotification(this.i18n.t('settings.resetSuccess'), '', 'info');
+    }
   }
 
   /**

@@ -57,7 +57,19 @@
     "lightMode": "Light Mode",
     "about": "About",
     "checkUpdate": "Check for Updates",
-    "forceUpdate": "Update Now"
+    "forceUpdate": "Update Now",
+    "dataManagement": "Data Management",
+    "exportData": "Export Data",
+    "exportDataDesc": "Download a backup of your meditation data",
+    "importData": "Import Data",
+    "importDataDesc": "Restore data from a backup file",
+    "resetData": "Delete All Data",
+    "resetDataDesc": "Permanently deletes all records",
+    "exportSuccess": "Data exported",
+    "importSuccess": "Data imported",
+    "importError": "Import error",
+    "importErrorDesc": "File does not contain valid data",
+    "resetSuccess": "Data deleted"
   },
   "badges": {
     "seed": {

@@ -1,7 +1,10 @@
 {
-  "version": "1.1.0",
-  "buildDate": "2026-03-20",
+  "version": "1.2.0",
+  "buildDate": "2026-03-21",
   "changelog": [
+    "v1.2.0: Export meditačních dat do JSON souboru",
+    "v1.2.0: Import dat ze zálohy (JSON soubor)",
+    "v1.2.0: Reset všech dat s potvrzením",
     "v1.1.0: Oprava duplicitních event listenerů (bgSound, volume)",
     "v1.1.0: Elapsed time u přerušených sezení se ukládá správně",
     "v1.1.0: Odznaky zobrazují text v aktivním jazyce (i18n)",

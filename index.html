@@ -317,6 +317,37 @@
 
                     <div class="card settings-group">
                         <h3>
+                            <span class="material-symbols-outlined">storage</span>
+                            <span data-i18n="settings.dataManagement">Správa dat</span>
+                        </h3>
+                        <div class="data-actions">
+                            <button id="exportDataBtn" class="btn btn-secondary data-btn">
+                                <span class="material-symbols-outlined">download</span>
+                                <div class="btn-text">
+                                    <span data-i18n="settings.exportData">Exportovat data</span>
+                                    <small data-i18n="settings.exportDataDesc">Stáhnout zálohu meditačních dat</small>
+                                </div>
+                            </button>
+                            <button id="importDataBtn" class="btn btn-secondary data-btn">
+                                <span class="material-symbols-outlined">upload</span>
+                                <div class="btn-text">
+                                    <span data-i18n="settings.importData">Importovat data</span>
+                                    <small data-i18n="settings.importDataDesc">Obnovit data ze zálohy</small>
+                                </div>
+                            </button>
+                            <input type="file" id="importFileInput" accept=".json" style="display:none">
+                            <button id="resetDataBtn" class="btn btn-danger data-btn">
+                                <span class="material-symbols-outlined">delete_forever</span>
+                                <div class="btn-text">
+                                    <span data-i18n="settings.resetData">Smazat všechna data</span>
+                                    <small data-i18n="settings.resetDataDesc">Nevratně smaže všechny záznamy</small>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card settings-group">
+                        <h3>
                             <span class="material-symbols-outlined">info</span>
                             <span data-i18n="settings.about">O aplikaci</span>
                         </h3>

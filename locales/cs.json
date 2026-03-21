@@ -57,7 +57,19 @@
     "lightMode": "Světlý režim",
     "about": "O aplikaci",
     "checkUpdate": "Zkontrolovat aktualizace",
-    "forceUpdate": "Aktualizovat nyní"
+    "forceUpdate": "Aktualizovat nyní",
+    "dataManagement": "Správa dat",
+    "exportData": "Exportovat data",
+    "exportDataDesc": "Stáhnout zálohu meditačních dat",
+    "importData": "Importovat data",
+    "importDataDesc": "Obnovit data ze zálohy",
+    "resetData": "Smazat všechna data",
+    "resetDataDesc": "Nevratně smaže všechny záznamy",
+    "exportSuccess": "Data exportována",
+    "importSuccess": "Data importována",
+    "importError": "Chyba importu",
+    "importErrorDesc": "Soubor neobsahuje platná data",
+    "resetSuccess": "Data smazána"
   },
   "badges": {
     "seed": {
