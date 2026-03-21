@@ -545,9 +545,9 @@ class MeditationApp {
   async changeBgSound(soundName) {
     await this.audio.unlock();
 
-    // Stop current sound
+    // Stop current sound immediately — fade causes orphaned sources when switching quickly
     if (this.audio.isPlaying('background')) {
-      this.audio.stopTrack('background', 1);
+      this.audio.stopTrack('background', 0);
     }
 
     if (soundName === 'none') return;

@@ -53,6 +53,17 @@ class MeditationAudio {
       await this.unlock();
     }
 
+    // Stop and clean up existing source before overwriting — prevents dangling nodes
+    if (this.tracks[name]) {
+      const existing = this.tracks[name];
+      if (existing.source) {
+        try { existing.source.stop(); } catch (e) { /* already stopped */ }
+        existing.source = null;
+      } else if (existing.type === 'html5' && existing.audio) {
+        existing.audio.pause();
+      }
+    }
+
     if (this.useFallback) {
       // Use HTML5 Audio as fallback
       const audio = new Audio(url);
